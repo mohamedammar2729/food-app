@@ -1,31 +1,11 @@
 import MainHeading from "@/components/main-heading";
 import Menu from "@/components/menu";
+import { db } from "@/lib/prisma";
 
 
-function BestSellers() {
-  const bestSellers = [
-    {
-      id: crypto.randomUUID(),
-      title: "Product 1",
-      image: "/assets/images/food.png",
-      price: 29.99,
-      description: "Delicious pizza with fresh ingredients.",
-    },
-    {
-      id: crypto.randomUUID(),
-      title: "Product 2",
-      image: "/assets/images/food.png",
-      price: 19.99,
-      description: "Tasty pasta with homemade sauce.",
-    },
-    {
-      id: crypto.randomUUID(),
-      title: "Product 3",
-      image: "/assets/images/food.png",
-      price: 24.99,
-      description: "Fresh salad with seasonal vegetables.",
-    },
-  ];
+async function BestSellers() {
+  const bestSellers = await db.product.findMany();
+  console.log(bestSellers);
   return (
     <section>
       <div className="container">
