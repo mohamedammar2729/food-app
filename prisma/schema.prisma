@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
 }
 
 datasource db {
@@ -23,13 +24,22 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   sizes       Size[]
+  extras      Extra[]
 }
 
 model Size {
-  id   String      @id @default(cuid())
-  name ProductSize
-  Price Float
-  product   Product @relation(fields: [productId], references: [id])
+  id        String      @id @default(cuid())
+  name      ProductSize
+  Price     Float
+  product   Product     @relation(fields: [productId], references: [id])
+  productId String
+}
+
+model Extra {
+  id        String        @id @default(cuid())
+  name      ProductExtras
+  Price     Float
+  product   Product       @relation(fields: [productId], references: [id])
   productId String
 }
 
@@ -37,4 +47,13 @@ enum ProductSize {
   SMALL
   MEDIUM
   LARGE
+}
+
+enum ProductExtras {
+  CHEESE
+  SAUCE
+  TOPPING
+  ONION
+  PEPPER
+  BACON
 }

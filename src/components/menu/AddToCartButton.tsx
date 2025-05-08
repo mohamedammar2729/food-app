@@ -16,20 +16,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { formatCurrency } from "@/lib/formatters";
+import { Extra, Size } from "@prisma/client";
+import { ProductWithRelations } from "@/Types/products";
 
-const sizes = [
-  { id: crypto.randomUUID(), name: "Small", price: 0 },
-  { id: crypto.randomUUID(), name: "Medium", price: 4 },
-  { id: crypto.randomUUID(), name: "Large", price: 8 },
-];
 
-const extras = [
-  { id: crypto.randomUUID(), name: "Cheese", price: 2 },
-  { id: crypto.randomUUID(), name: "Sauce", price: 1 },
-  { id: crypto.randomUUID(), name: "Toppings", price: 3 },
-];
-
-function AddToCartButton({ product }: { product: any }) {
+function AddToCartButton({ product }: { product: ProductWithRelations }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -45,25 +36,27 @@ function AddToCartButton({ product }: { product: any }) {
         <DialogHeader className="flex items-center ">
           <Image
             src={product.image}
-            alt={product.title}
+            alt={product.name}
             width={200}
             height={200}
           />
-          <DialogTitle className="text-center">{product.title}</DialogTitle>
+          <DialogTitle className="text-center">{product.name}</DialogTitle>
           <DialogDescription>{product.description}</DialogDescription>
         </DialogHeader>
         <div className="space-y-10">
           <div className="space-y-4 text-center">
             <Label htmlFor="size">Pick your size</Label>
-            <PickSize sizes={sizes} product={product} />
+            <PickSize sizes={product.sizes} product={product} />
           </div>
           <div className="space-y-4 text-center">
             <Label htmlFor="extra">Any extras?</Label>
-            <Extras extras={extras} />
+            <Extras extras={product.extras} />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" className="w-full h-10">Add To Cart</Button>
+          <Button type="submit" className="w-full h-10">
+            Add To Cart
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -72,7 +65,13 @@ function AddToCartButton({ product }: { product: any }) {
 
 export default AddToCartButton;
 
-function PickSize({ sizes, product }: { sizes: any; product: any }) {
+function PickSize({
+  sizes,
+  product,
+}: {
+  sizes: Size[];
+  product: ProductWithRelations;
+}) {
   return (
     <RadioGroup defaultValue="comfortable">
       {sizes.map((size: any) => (
@@ -82,7 +81,7 @@ function PickSize({ sizes, product }: { sizes: any; product: any }) {
         >
           <RadioGroupItem value="default" id={size.id} />
           <Label htmlFor={size.id}>
-            {size.name} {formatCurrency(product.price + size.price)}
+            {size.name} {formatCurrency(product.baseprice + size.Price)}
           </Label>
         </div>
       ))}
@@ -90,10 +89,10 @@ function PickSize({ sizes, product }: { sizes: any; product: any }) {
   );
 }
 
-function Extras({ extras}: { extras: any }) {
+function Extras({ extras }: { extras: Extra[] }) {
   return (
     <>
-      {extras.map((extra: any) => (
+      {extras.map((extra) => (
         <div
           key={extra.id}
           className="flex items-center space-x-2 border border-gray-100 rounded-md p-4"
@@ -103,7 +102,7 @@ function Extras({ extras}: { extras: any }) {
             htmlFor={extra.id}
             className="text-sm text-accent font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            {extra.name} {formatCurrency(extra.price)}
+            {extra.name} {formatCurrency(extra.Price)}
           </Label>
         </div>
       ))}
