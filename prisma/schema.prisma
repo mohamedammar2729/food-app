@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "app/generated/prisma/client"
 }
 
 datasource db {
@@ -14,17 +13,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         String         @id @default(cuid())
+  name       String
+  email      String         @unique
+  password   String
+  image      String?
+  phone      String?
+  address    String?
+  city       String?
+  country    String?
+  postalCode String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  order      OrderProduct[]
+}
+
 model Product {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
   description String
   baseprice   Float
   image       String
   order       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   sizes       Size[]
   extras      Extra[]
+  orders      OrderProduct[]
+  category    Category       @relation(fields: [categoryId], references: [id])
+  categoryId  String
 }
 
 model Size {
@@ -40,6 +58,43 @@ model Extra {
   name      ProductExtras
   Price     Float
   product   Product       @relation(fields: [productId], references: [id])
+  productId String
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  order    Int       @default(autoincrement())
+  products Product[]
+}
+
+model Order {
+  id          String         @id @default(cuid())
+  paid        Boolean        @default(false)
+  subTotal    Float
+  deliveryFee Float
+  totalPrice  Float
+  userEmail   String
+  phone       String
+  address     String
+  city        String
+  country     String
+  postalCode  String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  products    OrderProduct[]
+}
+
+model OrderProduct {
+  id        String   @id @default(cuid())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  product   Product  @relation(fields: [productId], references: [id])
   productId String
 }
 

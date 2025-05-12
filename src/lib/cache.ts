@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unstable_cache as nextCache } from "next/cache";
 
-import { cache as ReactCache } from "react";
+import { cache as reactCache } from "react";
 
 // This is a wrapper around the unstable_cache function from Next.js
 // that provides a consistent interface for caching data in both server and client components.
@@ -18,5 +18,5 @@ export function createCache<T extends CallBack>(
   keyParts: string[],
   options: { revalidate?: number | false; tags?: string[] }
 ) {
-  return nextCache(ReactCache(cb), keyParts, options);
+  return nextCache(reactCache(cb), keyParts, options);
 }
