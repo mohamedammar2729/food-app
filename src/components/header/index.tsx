@@ -1,6 +1,7 @@
 import { Routes } from "@/constants/enums";
 import Link from "../link";
 import NavBar from "./NavBar";
+import CartButton from "./CartButton";
 
 function Header() {
   return (
@@ -13,6 +14,7 @@ function Header() {
           🍕 Food
         </Link>
         <NavBar />
+        <CartButton />
       </div>
     </header>
   );
