@@ -19,11 +19,16 @@ import { formatCurrency } from "@/lib/formatters";
 import { Extra, ProductSize, Size } from "@prisma/client";
 import { ProductWithRelations } from "@/Types/products";
 import { useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCartItems } from "@/redux/features/cart/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { addCartItem, removeCartItem, removeItemFromCart, selectCartItems } from "@/redux/features/cart/cartSlice";
+import { getItemQuantity } from "@/lib/cart";
 
 function AddToCartButton({ product }: { product: ProductWithRelations }) {
   const cart = useAppSelector(selectCartItems);
+  const dispatch = useAppDispatch();
+
+  const quantity = getItemQuantity(cart, product.id) || 0;
+
   const defaultSize =
     cart.find((element) => element.id === product.id)?.size ||
     product.sizes.find((size) => size.name === ProductSize.SMALL);
@@ -45,7 +50,25 @@ function AddToCartButton({ product }: { product: ProductWithRelations }) {
     }
   }
 
-  const handleAddToCart = () => {};
+  const handleAddToCart = () => {
+    // const cartItem = {
+    //   id: product.id,
+    //   name: product.name,
+    //   basePrice: product.baseprice,
+    //   image: product.image,
+    //   size: selectedSize,
+    //   extras: selectedExtras,
+    // };
+    // dispatch({ type: "cart/addCartItem", payload: cartItem });
+  dispatch(addCartItem({
+    id: product.id,
+    name: product.name,
+    basePrice: product.baseprice,
+    image: product.image,
+    size: selectedSize,
+    extras: selectedExtras,
+  }));
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -88,9 +111,22 @@ function AddToCartButton({ product }: { product: ProductWithRelations }) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" className="w-full h-10">
-            Add To Cart {formatCurrency(totalPrice)}
-          </Button>
+          {quantity === 0 ? (
+            <Button
+              type="submit"
+              onClick={handleAddToCart}
+              className="w-full h-10"
+            >
+              Add to cart {formatCurrency(totalPrice)}
+            </Button>
+          ) : (
+            <ChooseQuantity
+              quantity={quantity}
+              product={product}
+              selectedSize={selectedSize}
+              selectedExtras={selectedExtras}
+            />
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -172,3 +208,55 @@ function Extras({
     </>
   );
 }
+
+const ChooseQuantity = ({
+  quantity,
+  product,
+  selectedExtras,
+  selectedSize,
+}: {
+  quantity: number;
+  selectedExtras: Extra[];
+  selectedSize: Size;
+  product: ProductWithRelations;
+}) => {
+  const dispatch = useAppDispatch();
+  return (
+    <div className="flex items-center flex-col gap-2 mt-4 w-full">
+      <div className="flex items-center justify-center gap-2">
+        <Button
+          variant="outline"
+          onClick={() => dispatch(removeCartItem({ id: product.id }))}
+        >
+          -
+        </Button>
+        <div>
+          <span className="text-black">{quantity} in cart</span>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() =>
+            dispatch(
+              addCartItem({
+                basePrice: product.baseprice,
+                id: product.id,
+                image: product.image,
+                name: product.name,
+                extras: selectedExtras,
+                size: selectedSize,
+              })
+            )
+          }
+        >
+          +
+        </Button>
+      </div>
+      <Button
+        size="sm"
+        onClick={() => dispatch(removeItemFromCart({ id: product.id }))}
+      >
+        Remove
+      </Button>
+    </div>
+  );
+};

@@ -1,6 +1,6 @@
-import MainHeading from "../../components/main-heading";
-import Menu from "../../components/menu";
-import { getBestSellers } from "../../server/db/products";
+import MainHeading from "../../../components/main-heading";
+import Menu from "../../../components/menu";
+import { getBestSellers } from "../../../server/db/products";
 
 
 async function BestSellers() {
