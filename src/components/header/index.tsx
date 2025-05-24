@@ -2,18 +2,24 @@ import { Routes } from "@/constants/enums";
 import Link from "../link";
 import NavBar from "./NavBar";
 import CartButton from "./CartButton";
+import { getCurrentLocale } from "@/lib/getCurrentLocale";
+import getTranslation from "@/lib/translation";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-function Header() {
+async function Header() {
+  const locale = await getCurrentLocale();
+  const { logo, navbar } = await getTranslation(locale);
   return (
     <header className="py-4 md:py-6">
       <div className="container flex items-center justify-between ">
         <Link
-          href={Routes.ROOT}
+          href={`/${locale}`}
           className="text-primary font-semibold text-2xl"
         >
-          🍕 Food
+          🍕 {logo}
         </Link>
-        <NavBar />
+        <NavBar tarnslations={navbar} />
+        <LanguageSwitcher />
         <CartButton />
       </div>
     </header>

@@ -4,16 +4,24 @@ import Link from "../link";
 import { Button, buttonVariants } from "../ui/button";
 import { useState } from "react";
 import { Menu, XIcon } from "lucide-react";
+import { useParams, usePathname } from "next/navigation";
 
-function NavBar() {
+
+function NavBar({ tarnslations }: { tarnslations: { [key: string]: string } }) {
   const [openMenu, setOpenMenu] = useState(false);
+  const {locale} = useParams();
+  const pathname = usePathname();
   const links = [
-    { id: crypto.randomUUID(), title: "Menu", href: Routes.MENU },
-    { id: crypto.randomUUID(), title: "About", href: Routes.ABOUT },
-    { id: crypto.randomUUID(), title: "Contact", href: Routes.CONTACT },
+    { id: crypto.randomUUID(), title: tarnslations.menu, href: Routes.MENU },
+    { id: crypto.randomUUID(), title: tarnslations.about, href: Routes.ABOUT },
     {
       id: crypto.randomUUID(),
-      title: "login",
+      title: tarnslations.contact,
+      href: Routes.CONTACT,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: tarnslations.login,
       href: `${Routes.AUTH}/${Pages.LOGIN}`,
     },
   ];
@@ -44,17 +52,22 @@ function NavBar() {
         {links.map((link) => (
           <li key={link.id}>
             <Link
-              href={`/${link.href}`}
+              href={`/${locale}/${link.href}`}
               className={`${
                 link.href === `${Routes.AUTH}/${Pages.LOGIN}`
                   ? `${buttonVariants({ size: "lg" })} !rounded-full !px-8 `
-                  : "text-accent hover:text-primary duration-200 transition-colors"
-              }font-semibold`}
+                  : " hover:text-primary duration-200 transition-colors"
+              }font-semibold  ${
+                pathname === `/${locale}/${link.href}`
+                  ? "text-primary"
+                  : "text-accent"
+              }`}
             >
               {link.title}
             </Link>
           </li>
         ))}
+        
       </ul>
     </nav>
   );

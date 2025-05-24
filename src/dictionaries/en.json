@@ -1,5 +1,5 @@
 {
-  "logo": "Pizza",
+  "logo": "Food",
   "home": {
     "hero": {
       "title": "Slice into Happiness",
@@ -15,9 +15,10 @@
       "ourStory": "Our story",
       "aboutUs": "About us",
       "descriptions": {
-        "one": "Welcome to our pizzeria, where we serve the finest pizzas made with the freshest ingredients. Every slice is a masterpiece, crafted with care to deliver the perfect balance of flavors. From classic favorites to unique creations, there's something for every pizza lover!",
-        "two": "Our passion for pizza shines through every dish. We hand-pick the best local ingredients and bake them to perfection, ensuring that every bite is delicious and satisfying. Whether you're here for a quick meal or a relaxed dining experience, we’ve got you covered.",
-        "three": "Join us on a flavorful journey and experience the joy of pizza like never before. We pride ourselves on delivering great taste, quality, and service to make every meal memorable. Come and taste the difference!"
+        "one": "Welcome to our Food website, where serve the finest foods We are passionate about bringing you the best culinary experience",
+        "two": "Our team of expert chefs and food enthusiasts work tirelessly to create delicious dishes that will tantalize your taste buds.",
+        "three": "We source only the freshest ingredients from local farms and markets, ensuring that every bite is bursting with flavor.",
+        "four": "Whether you're looking for a quick bite or a gourmet meal, we have something for everyone. Our menu features a wide variety of options, from classic favorites to innovative creations that will surprise and delight you."
       }
     },
     "contact": {
@@ -235,7 +236,7 @@
     "title": "Shopping Cart",
     "noItemsInCart": "There are no items in your cart. Add some"
   },
-  "copyRight": "© 2024 All rights reserved",
+  "copyRight": "© 2025 All rights reserved",
   "noProductsFound": "No products found",
   "noCategoriesFound": "No categories found"
 }
