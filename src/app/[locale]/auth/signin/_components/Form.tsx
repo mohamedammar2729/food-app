@@ -2,15 +2,20 @@
 
 import FormFields from "@/components/form-fields/form-fields";
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/ui/loader";
+
 import { Pages } from "@/constants/enums";
 import useFormFields from "@/hooks/useFormFields";
 import { IFormField } from "@/Types/app";
+import { Translations } from "@/Types/translations";
 import { signIn } from "next-auth/react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
- function Form() {
+function Form({translations}: {translations: Translations}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const { getFormFields } = useFormFields({
     slug: Pages.LOGIN,
     translations: {},
@@ -30,6 +35,8 @@ import { useRef, useState } from "react";
       data[key] = value.toString();
     });
     try {
+      setIsLoading(true);
+      // call signIn function from next-auth with credentials provider
       const res = await signIn("credentials", {
         email: data.email,
         password: data.password,
@@ -39,14 +46,19 @@ import { useRef, useState } from "react";
         // handle error
         const validationError = JSON.parse(res?.error).validationError;
         setError(validationError);
-      } else {
-        // handle success
-        console.log("Sign in successful");
-        // redirect to home page or any other page
-        window.location.href = "/";
+        const responseError = JSON.parse(res?.error).responseError;
+        if (responseError) {
+          toast.error(responseError);
+        }
       }
-    } catch(error) {
+      if( res?.ok) {
+        // if signIn success, redirect to home page
+        toast.success(translations.messages.loginSuccessful);
+      }
+    } catch (error) {
       console.log(error);
+    } finally{
+      setIsLoading(false);
     }
   };
   return (
@@ -56,8 +68,8 @@ import { useRef, useState } from "react";
           <FormFields {...field} error={error} />
         </div>
       ))}
-      <Button type="submit" className="w-full">
-        Sign In
+      <Button type="submit" disabled={isLoading} className="w-full">
+        {isLoading ? <Loader /> : translations.auth.login.submit}
       </Button>
     </form>
   );

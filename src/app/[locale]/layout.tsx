@@ -7,6 +7,7 @@ import { Cairo, Roboto } from "next/font/google";
 
 import "./globals.css";
 import { Locale } from "@/i18n-config";
+import { Toaster } from "@/components/ui/sonner";
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }];
@@ -51,6 +52,7 @@ export default async function RootLayout({
           <Header />
           {children}
           <Footer />
+          <Toaster position="top-center" richColors/>
         </ReduxProvider>
       </body>
     </html>

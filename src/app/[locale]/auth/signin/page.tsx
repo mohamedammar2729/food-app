@@ -4,8 +4,11 @@ import { Pages, Routes } from "@/constants/enums";
 import { getCurrentLocale } from "@/lib/getCurrentLocale";
 import Form from "./_components/Form";
 
+import getTranslation from "@/lib/translation";
+
 async function SigninPage() {
     const locale = await getCurrentLocale();
+    const translations = await getTranslation(locale);
   return (
     <main>
       <div className="py-44 md:py-40 bg-gray-50 element-center">
@@ -14,7 +17,7 @@ async function SigninPage() {
             <h2 className="text-2xl font-semibold text-center text-black mb-4">
               Welcome Back!
             </h2>
-            <Form />
+            <Form translations={translations} />
             <p className="mt-2 flex items-center justify-center text-accent text-sm">
               <span>Dont have an account </span>
               <Link
