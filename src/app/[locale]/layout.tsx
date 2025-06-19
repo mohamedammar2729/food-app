@@ -8,6 +8,7 @@ import { Cairo, Roboto } from "next/font/google";
 import "./globals.css";
 import { Locale } from "@/i18n-config";
 import { Toaster } from "@/components/ui/sonner";
+import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 
 export async function generateStaticParams() {
   return [{ locale: Languages.ARABIC }, { locale: Languages.ENGLISH }];
@@ -48,12 +49,14 @@ export default async function RootLayout({
           locale === Languages.ARABIC ? cairo.className : roboto.className
         }
       >
-        <ReduxProvider>
-          <Header />
-          {children}
-          <Footer />
-          <Toaster position="top-center" richColors/>
-        </ReduxProvider>
+        <NextAuthSessionProvider>
+          <ReduxProvider>
+            <Header />
+            {children}
+            <Footer />
+            <Toaster position="top-center" richColors />
+          </ReduxProvider>
+        </NextAuthSessionProvider>
       </body>
     </html>
   );

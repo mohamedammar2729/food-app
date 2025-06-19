@@ -4,21 +4,25 @@ import FormFields from "@/components/form-fields/form-fields";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 
-import { Pages } from "@/constants/enums";
+import { Pages, Routes } from "@/constants/enums";
 import useFormFields from "@/hooks/useFormFields";
 import { IFormField } from "@/Types/app";
 import { Translations } from "@/Types/translations";
 import { signIn } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 function Form({translations}: {translations: Translations}) {
+  const {locale} = useParams();
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const { getFormFields } = useFormFields({
     slug: Pages.LOGIN,
-    translations: {},
+    translations,
   });
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +58,7 @@ function Form({translations}: {translations: Translations}) {
       if( res?.ok) {
         // if signIn success, redirect to home page
         toast.success(translations.messages.loginSuccessful);
+        router.replace(`/${locale}/${Routes.PROFILE}`);
       }
     } catch (error) {
       console.log(error);

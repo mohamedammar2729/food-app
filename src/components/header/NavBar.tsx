@@ -1,32 +1,53 @@
 "use client";
-import { Pages, Routes } from "@/constants/enums";
+import { Routes } from "@/constants/enums";
 import Link from "../link";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import { useState } from "react";
 import { Menu, XIcon } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
+import LanguageSwitcher from "./LanguageSwitcher";
+import AuthButtons from "./AuthButtons";
+import { Translations } from "@/Types/translations";
+import { Session } from "next-auth";
+import { useClientSession } from "@/hooks/useClientSession";
+import { UserRole } from "@prisma/client";
 
-
-function NavBar({ tarnslations }: { tarnslations: { [key: string]: string } }) {
+function NavBar({
+  translations,
+  initialSession,
+}: {
+  translations: Translations;
+  initialSession: Session | null;
+}) {
+  const session = useClientSession(initialSession);
   const [openMenu, setOpenMenu] = useState(false);
-  const {locale} = useParams();
+  const { locale } = useParams();
   const pathname = usePathname();
   const links = [
-    { id: crypto.randomUUID(), title: tarnslations.menu, href: Routes.MENU },
-    { id: crypto.randomUUID(), title: tarnslations.about, href: Routes.ABOUT },
     {
       id: crypto.randomUUID(),
-      title: tarnslations.contact,
+      title: translations.navbar.menu,
+      href: Routes.MENU,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: translations.navbar.about,
+      href: Routes.ABOUT,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: translations.navbar.contact,
       href: Routes.CONTACT,
     },
-    {
-      id: crypto.randomUUID(),
-      title: tarnslations.login,
-      href: `${Routes.AUTH}/${Pages.LOGIN}`,
-    },
+    // {
+    //   id: crypto.randomUUID(),
+    //   title: tarnslations.login,
+    //   href: `${Routes.AUTH}/${Pages.LOGIN}`,
+    // },
   ];
+  const isAdmin = session.data?.user.role === UserRole.ADMIN;
   return (
-    <nav className="flex-1 justify-end flex">
+    <nav className="order-last lg:order-none">
       <Button
         variant="secondary"
         size="sm"
@@ -52,22 +73,53 @@ function NavBar({ tarnslations }: { tarnslations: { [key: string]: string } }) {
         {links.map((link) => (
           <li key={link.id}>
             <Link
+              onClick={() => setOpenMenu(false)}
               href={`/${locale}/${link.href}`}
-              className={`${
-                link.href === `${Routes.AUTH}/${Pages.LOGIN}`
-                  ? `${buttonVariants({ size: "lg" })} !rounded-full !px-8 `
-                  : " hover:text-primary duration-200 transition-colors"
-              }font-semibold  ${
-                pathname === `/${locale}/${link.href}`
-                  ? "text-primary"
-                  : "text-accent"
-              }`}
+              className={`" font-semibold hover:text-primary duration-200 transition-colors"  
+                ${
+                  pathname === `/${locale}/${link.href}`
+                    ? "text-primary"
+                    : "text-accent"
+                }`}
             >
               {link.title}
             </Link>
           </li>
         ))}
-        
+        {session.data?.user && (
+          <li>
+            <Link
+              href={
+                isAdmin
+                  ? `/${locale}/${Routes.ADMIN}`
+                  : `/${locale}/${Routes.PROFILE}`
+              }
+              onClick={() => setOpenMenu(false)}
+              className={`${
+                pathname.startsWith(
+                  isAdmin
+                    ? `/${locale}/${Routes.ADMIN}`
+                    : `/${locale}/${Routes.PROFILE}`
+                )
+                  ? "text-primary"
+                  : "text-accent"
+              } hover:text-primary duration-200 transition-colors font-semibold`}
+            >
+              {isAdmin
+                ? translations.navbar.admin
+                : translations.navbar.profile}
+            </Link>
+          </li>
+        )}
+        <li className="lg:hidden flex flex-col gap-4">
+          <div onClick={() => setOpenMenu(false)}>
+            <AuthButtons
+              translations={translations}
+              initialSession={initialSession}
+            />
+          </div>
+          <LanguageSwitcher />
+        </li>
       </ul>
     </nav>
   );

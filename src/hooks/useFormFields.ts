@@ -1,30 +1,61 @@
 import { Pages } from "@/constants/enums";
 import { IFormField, IFormFieldsVariables } from "@/Types/app";
+import { Translations } from "@/Types/translations";
 
 interface Props extends IFormFieldsVariables {
-  translations: any;
+  translations: Translations;
 }
 
 const useFormFields = ({ slug, translations }: Props) => {
   const loginFields = (): IFormField[] => [
     {
-      label: "email",
+      label: translations.auth.login.email.label,
       name: "email",
       type: "email",
-      placeholder: "enter your email",
+      placeholder: translations.auth.login.email.placeholder,
       autoFocus: true,
     },
     {
-      label: "password",
+      label: translations.auth.login.password.label,
       name: "password",
       type: "password",
-      placeholder: "enter your password",
+      placeholder: translations.auth.login.password.placeholder,
     },
   ];
+  const signupFields = (): IFormField[] => [
+    {
+      label: translations.auth.register.name.label,
+      name: "name",
+      type: "text",
+      placeholder: translations.auth.register.name.placeholder,
+      autoFocus: true,
+    },
+    {
+      label: translations.auth.register.email.label,
+      name: "email",
+      type: "email",
+      placeholder: translations.auth.register.email.placeholder,
+    },
+    {
+      label: translations.auth.register.password.label,
+      name: "password",
+      type: "password",
+      placeholder: translations.auth.register.password.placeholder,
+    },
+    {
+      label: translations.auth.register.confirmPassword.label,
+      name: "confirmPassword",
+      type: "password",
+      placeholder: translations.auth.register.confirmPassword.placeholder,
+    },
+  ];
+
   const getFormFields = (): IFormField[] => {
     switch (slug) {
       case Pages.LOGIN:
         return loginFields();
+      case Pages.Register:
+        return signupFields();
       default:
         return [];
     }

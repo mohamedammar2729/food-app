@@ -133,4 +133,6 @@ body {
   .element-center {
     @apply flex items-center justify-center;
   }
+
+
 }
