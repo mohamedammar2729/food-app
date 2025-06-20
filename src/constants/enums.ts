@@ -7,7 +7,8 @@ export enum Languages {
   ENGLISH = "en",
   ARABIC = "ar",
 }
-
+// if component contain sub pages it consider as Route
+// if component is a page it consider as Page
 export enum Routes {
   ROOT = "/",
   MENU = "menu",
