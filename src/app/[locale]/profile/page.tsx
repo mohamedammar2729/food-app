@@ -3,7 +3,7 @@ import { UserRole } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { Locale } from "@/i18n-config";
 import { redirect } from "next/navigation";
-import { Routes } from "@/constants/enums";
+import { Pages, Routes } from "@/constants/enums";
 import getTranslation from "@/lib/translation";
 import EditUserForm from "@/components/edit-user-form";
 
@@ -17,6 +17,11 @@ async function ProfilePage({
   const { locale } = await params;
   const session = await getServerSession(authOptions);
   const translations = await getTranslation(locale);
+
+    if (!session) {
+      redirect(`/${locale}/${Routes.AUTH}/${Pages.LOGIN}`);
+    }
+
   if (session && session.user.role === UserRole.ADMIN) {
     redirect(`/${locale}/${Routes.ADMIN}`);
   }

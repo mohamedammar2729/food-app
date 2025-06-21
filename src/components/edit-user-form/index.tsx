@@ -11,7 +11,7 @@ import { UserRole } from "@prisma/client";
 import Checkbox from "../form-fields/checkbox";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+
 import { ValidationErrors } from "@/validations/auth";
 import Loader from "../ui/loader";
 import { updateProfile } from "./_actions/profile";
@@ -24,7 +24,7 @@ function EditUserForm({
   translations: Translations;
   user: Session["user"];
 }) {
-  const session = useSession();
+
   const formData = new FormData();
 // get the user data and append some attributes to the formData
 // object.entries(user) it converts the user object into an array of key-value pairs
@@ -54,6 +54,9 @@ function EditUserForm({
   const [isAdmin, setIsAdmin] = useState(user.role === UserRole.ADMIN);
 
   const [state, action, pending] = useActionState(
+    // we add another parameter to the updateProfile function
+    // to indicate if the user is an admin or not
+    //isAdmin with initial value null
     updateProfile.bind(null, isAdmin),
     initialState
   );
@@ -114,8 +117,10 @@ function EditUserForm({
             </div>
           );
         })}
-        {session.data?.user.role === UserRole.ADMIN && (
+        
+        {user.role === UserRole.ADMIN && (
           <div className="flex items-center gap-2 my-4">
+            {/* Checkbox is from shadcn ui and it considered button */}
             <Checkbox
               name="admin"
               checked={isAdmin}

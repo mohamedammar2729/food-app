@@ -57,9 +57,11 @@ export const updateProfile = async (
         // if imageUrl is undefined, it will not update the image and will keep the previous image
         // if imageUrl is defined, you will use the imageUrl
         image: imageUrl ?? user.image,
+        // if isAdmin is true, then the role will be ADMIN, otherwise it will be USER
         role: isAdmin ? UserRole.ADMIN : UserRole.USER,
       },
     });
+    // Revalidate paths to ensure the updated profile is reflected from the cache
     revalidatePath(`/${locale}/${Routes.PROFILE}`);
     revalidatePath(`/${locale}/${Routes.ADMIN}`);
     revalidatePath(`/${locale}/${Routes.ADMIN}/${Pages.USERS}`);
