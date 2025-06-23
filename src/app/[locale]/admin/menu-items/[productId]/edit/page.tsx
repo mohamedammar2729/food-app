@@ -8,9 +8,12 @@ import { Locale } from '@/i18n-config';
 import getTranslation from '@/lib/translation';
 import { getProduct, getProducts } from '@/server/db/products';
 
+// should generate static params because this page is dynamic route 
+
 export async function generateStaticParams() {
   const products = await getProducts();
 
+  // productId should match the folder name of the dynamic route
   return products.map((product) => ({ productId: product.id }));
 }
 async function EditProductPage({

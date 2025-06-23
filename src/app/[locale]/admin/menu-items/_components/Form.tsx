@@ -4,20 +4,13 @@ import FormFields from '@/components/form-fields/form-fields';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Pages, Routes } from '@/constants/enums';
 import useFormFields from '@/hooks/useFormFields';
-
-
-
 import { CameraIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useActionState, useEffect, useState } from 'react';
-
 import { Category, Extra, Size } from '@prisma/client';
-
-
 import Link from '@/components/link';
 import { useParams } from 'next/navigation';
 import { ValidationErrors } from '@/validations/auth';
-
 import Loader from '@/components/ui/loader';
 import { Translations } from '@/Types/translations';
 import { toast } from 'sonner';

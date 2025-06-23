@@ -13,7 +13,12 @@ const imageValidation = (translations: Translations, isRequired: boolean) => {
           if (!(val instanceof File)) {
             return false;
           }
-          const validMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+          const validMimeTypes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/gif',
+          ];
           return validMimeTypes.includes(val.type);
         },
         {
@@ -49,6 +54,7 @@ export const addProductSchema = (translations: Translations) => {
 };
 export const updateProductSchema = (translations: Translations) => {
   return z.object({
+    // spread of all common validations
     ...getCommonValidations(translations),
     image: imageValidation(translations, false),
   });

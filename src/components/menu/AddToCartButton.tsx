@@ -39,7 +39,7 @@ function AddToCartButton({ product }: { product: ProductWithRelations }) {
   const [selectedSize, setSelectedSize] = useState<Size>(defaultSize!);
   const [selectedExtras, setSelectedExtras] = useState<Extra[]>(defaultExtras);
 
-  let totalPrice = product.baseprice;
+  let totalPrice = product.basePrice;
   if (selectedSize) {
     totalPrice += selectedSize.Price;
   }
@@ -63,7 +63,7 @@ function AddToCartButton({ product }: { product: ProductWithRelations }) {
   dispatch(addCartItem({
     id: product.id,
     name: product.name,
-    basePrice: product.baseprice,
+    basePrice: product.basePrice,
     image: product.image,
     size: selectedSize,
     extras: selectedExtras,
@@ -161,7 +161,7 @@ function PickSize({
             id={size.id}
           />
           <Label htmlFor={size.id}>
-            {size.name} {formatCurrency(product.baseprice + size.Price)}
+            {size.name} {formatCurrency(product.basePrice + size.Price)}
           </Label>
         </div>
       ))}
@@ -238,7 +238,7 @@ const ChooseQuantity = ({
           onClick={() =>
             dispatch(
               addCartItem({
-                basePrice: product.baseprice,
+                basePrice: product.basePrice,
                 id: product.id,
                 image: product.image,
                 name: product.name,

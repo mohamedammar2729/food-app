@@ -45,6 +45,9 @@ export const addProduct = async (
           categoryId: args.categoryId,
           sizes: {
             createMany: {
+              // Create sizes for the product
+              // args.options.sizes.map((size) will return an array of objects
+              // each object will have name and Price properties
               data: args.options.sizes.map((size) => ({
                 name: size.name as ProductSize,
                 Price: Number(size.Price),
@@ -61,6 +64,7 @@ export const addProduct = async (
           },
         },
       });
+      // should revalidate the menu and admin pages to reflect the new product
       revalidatePath(`/${locale}/${Routes.MENU}`);
       revalidatePath(`/${locale}/${Routes.ADMIN}/${Pages.MENU_ITEMS}`);
       revalidatePath(`/${locale}`);

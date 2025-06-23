@@ -23,7 +23,7 @@ model User {
   address    String?
   city       String?
   country    String?
-  role       UserRole        @default(USER) // USER, ADMIN
+  role       UserRole       @default(USER) // USER, ADMIN
   postalCode String?
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
@@ -76,7 +76,7 @@ model Product {
   description String
   basePrice   Float
   image       String
-  order       Int
+  order       Int            @default(autoincrement())
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   sizes       Size[]
@@ -86,11 +86,12 @@ model Product {
   categoryId  String
 }
 
+ // cascade delete means if the product is deleted, the sizes will also be deleted 
 model Size {
   id        String      @id @default(cuid())
   name      ProductSize
-  Price     Float
-  product   Product     @relation(fields: [productId], references: [id])
+  Price     Float         
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
 }
 
@@ -98,7 +99,7 @@ model Extra {
   id        String        @id @default(cuid())
   name      ProductExtras
   Price     Float
-  product   Product       @relation(fields: [productId], references: [id])
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
 }
 
