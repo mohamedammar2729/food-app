@@ -16,6 +16,7 @@ import { ValidationErrors } from "@/validations/auth";
 import Loader from "../ui/loader";
 import { updateProfile } from "./_actions/profile";
 import { CameraIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 function EditUserForm({
   translations,
@@ -25,6 +26,7 @@ function EditUserForm({
   user: Session["user"];
 }) {
 
+  const session = useSession();
   const formData = new FormData();
 // get the user data and append some attributes to the formData
 // object.entries(user) it converts the user object into an array of key-value pairs
@@ -80,34 +82,34 @@ function EditUserForm({
   }, [user.image]);
 
   return (
-    <form action={action} className="flex flex-col md:flex-row gap-10">
-      <div className="group relative w-[200px] h-[200px] overflow-hidden rounded-full mx-auto">
+    <form action={action} className='flex flex-col md:flex-row gap-10'>
+      <div className='group relative w-[200px] h-[200px] overflow-hidden rounded-full mx-auto'>
         {selectedImage && (
           <Image
             src={selectedImage}
             alt={user.name}
             width={200}
             height={200}
-            className="rounded-full object-cover"
+            className='rounded-full object-cover'
           />
         )}
 
         <div
           className={`${
             selectedImage
-              ? "group-hover:opacity-[1] opacity-0  transition-opacity duration-200"
-              : ""
+              ? 'group-hover:opacity-[1] opacity-0  transition-opacity duration-200'
+              : ''
           } absolute top-0 left-0 w-full h-full bg-gray-50/40`}
         >
           <UploadImage setSelectedImage={setSelectedImage} />
         </div>
       </div>
-      <div className="flex-1">
+      <div className='flex-1'>
         {getFormFields().map((field: IFormField) => {
           const fieldValue =
             state?.formData?.get(field.name) ?? formData.get(field.name);
           return (
-            <div key={field.name} className="mb-3">
+            <div key={field.name} className='mb-3'>
               <FormFields
                 {...field}
                 defaultValue={fieldValue as string}
@@ -117,19 +119,19 @@ function EditUserForm({
             </div>
           );
         })}
-        
-        {user.role === UserRole.ADMIN && (
-          <div className="flex items-center gap-2 my-4">
+
+        {session.data?.user.role === UserRole.ADMIN && (
+          <div className='flex items-center gap-2 my-4'>
             {/* Checkbox is from shadcn ui and it considered button */}
             <Checkbox
-              name="admin"
+              name='admin'
               checked={isAdmin}
               onClick={() => setIsAdmin(!isAdmin)}
-              label="Admin"
+              label='Admin'
             />
           </div>
         )}
-        <Button type="submit" className="w-full">
+        <Button type='submit' className='w-full'>
           {pending ? <Loader /> : translations.save}
         </Button>
       </div>
