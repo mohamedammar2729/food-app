@@ -49,3 +49,33 @@ export const getBestSellers = createCache(
     revalidate: 3600,
   }
 );
+
+export const getProducts = createCache(
+  () => {
+    const products = db.product.findMany({
+      orderBy: {
+        order: 'asc',
+      },
+    });
+    return products;
+  },
+  ['products'],
+  { revalidate: 3600 }
+);
+
+export const getProduct = createCache(
+  (id: string) => {
+    const product = db.product.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        sizes: true,
+        extras: true,
+      },
+    });
+    return product;
+  },
+  [`product-${crypto.randomUUID()}`],
+  { revalidate: 3600 }
+);

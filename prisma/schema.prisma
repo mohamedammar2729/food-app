@@ -74,7 +74,7 @@ model Product {
   id          String         @id @default(cuid())
   name        String
   description String
-  baseprice   Float
+  basePrice   Float
   image       String
   order       Int
   createdAt   DateTime       @default(now())
