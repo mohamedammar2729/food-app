@@ -347,8 +347,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Built with ❤️ using Next.js and modern web technologies**
-
 [⬆ Back to Top](#-food-ordering-application)
 
 </div>
