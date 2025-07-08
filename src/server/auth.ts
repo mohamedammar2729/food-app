@@ -128,6 +128,6 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db),
   pages: {
-    signIn: `/${Routes.AUTH}/${Pages.LOGIN}`,
+    signIn: `/${Routes.AUTH}/${Pages.LOGIN}`, // /auth/login is the custom login page
   },
 };
